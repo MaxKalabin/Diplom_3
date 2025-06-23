@@ -2,12 +2,10 @@ import allure
 from selenium.common import ElementClickInterceptedException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from locators.base_locators import BaseLocators
 
 class BasePage:
     def __init__(self, driver):
         self.driver = driver
-        self.locators = BaseLocators()
 
     @allure.step("Открытие URL {url}")
     def open(self, url):
@@ -19,7 +17,7 @@ class BasePage:
 
     @allure.step("Поиск элементов")
     def find_elements(self, locator, timeout=5):
-        WebDriverWait(self.driver, timeout).until(EC.presence_of_element_located(locator))
+        WebDriverWait(self.driver, timeout).until(EC.presence_of_all_elements_located(locator))
         return self.driver.find_elements(*locator)
 
     @allure.step("Клик по элементу")
@@ -55,7 +53,17 @@ class BasePage:
         return WebDriverWait(self.driver, timeout).until(EC.element_to_be_clickable(locator))
 
     def wait_for_element_to_be_visible(self, locator, timeout=5):
-        return WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+        return WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator),
+        f"Элемент {locator} не стал видимым за {timeout} секунд")
+
+    @allure.step("Ожидание исчезновения элемента")
+    def wait_for_element_to_be_invisible(self, locator, timeout=10):
+        return WebDriverWait(self.driver, timeout).until(EC.invisibility_of_element_located(locator),
+            f"Элемент {locator} не исчез за {timeout} секунд")
+
+    @allure.step("Ожидание выполнения условия")
+    def wait_for_condition(self, condition, timeout=10):
+        return WebDriverWait(self.driver, timeout).until(condition)
 
     @allure.step("Скролл страницы к {element}")
     def scroll_into_view(self, element):

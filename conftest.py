@@ -15,10 +15,14 @@ from test_data import ACCESS_TOKEN, MAIN_PAGE_URL
 def driver(request):
     if request.param == "chrome":
         options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        options.add_argument('--disable-gpu')
         options.add_argument('--window-size=1920,1080')
         driver = webdriver.Chrome(options=options)
     else:
         options = webdriver.FirefoxOptions()
+        options.add_argument('--headless')
+        options.add_argument('--disable-gpu')
         options.add_argument('--window-size=1400,900')
         driver = webdriver.Firefox(options=options)
 

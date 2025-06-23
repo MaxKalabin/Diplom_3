@@ -1,5 +1,4 @@
 import allure
-from selenium.webdriver.support.wait import WebDriverWait
 from pages.base_page import BasePage
 from locators.order_feed_locators import OrderFeedLocators
 from locators.base_locators import BaseLocators
@@ -50,10 +49,8 @@ class OrderFeedPage(BasePage):
             full_number = element.text.strip().replace("#", "")
             if full_number.endswith(order_number) or full_number == order_number:
                 return True
-
         assert False, f"Заказ {order_number} не найден в разделе 'В работе'"
 
     @allure.step("Ожидание появления заказа в разделе 'В работе'")
     def wait_for_order_in_progress(self, order_number, timeout=10):
-        WebDriverWait(self.driver, timeout).until(lambda _: self.is_order_in_progress(order_number),
-            f"Заказ {order_number} не найден в разделе 'В работе' за {timeout} секунд" )
+        self.wait_for_condition(lambda driver: self.is_order_in_progress(order_number),timeout)

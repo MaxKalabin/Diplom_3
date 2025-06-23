@@ -1,6 +1,4 @@
 import allure
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import BasePage
 from locators.constructor_locators import ConstructorLocators
 from locators.base_locators import BaseLocators
@@ -19,7 +17,7 @@ class ConstructorPage(BasePage):
 
     @allure.step("Получение списка ингредиентов")
     def get_ingredient_items(self, timeout=15):
-        return WebDriverWait(self.driver, timeout).until(EC.presence_of_all_elements_located(self.locators.INGREDIENT_ITEMS))
+        return self.find_elements(self.locators.INGREDIENT_ITEMS, timeout)
 
     @allure.step("Клик по ингредиенту")
     def click_ingredient(self, index=0):
@@ -29,12 +27,12 @@ class ConstructorPage(BasePage):
 
     @allure.step("Получение кол-ва ингредиента")
     def get_ingredient_counter(self, index=0):
-        WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(self.locators.INGREDIENT_COUNTER))
+        self.wait_for_element_to_be_visible(self.locators.INGREDIENT_COUNTER)
         return int(self.find_elements(self.locators.INGREDIENT_COUNTER)[index].text)
 
     @allure.step("Ожидание увеличения каунтера ингредиента")
     def wait_for_ingredient_counter_increase(self, index=0, initial_count=0, timeout=10):
-        WebDriverWait(self.driver, timeout).until(lambda _: self.get_ingredient_counter(index) > initial_count)
+        self.wait_for_condition((lambda _: self.get_ingredient_counter(index) > initial_count),timeout)
         return True
 
     @allure.step("Проверяем видно модальное окно с деталями заказа")
@@ -67,13 +65,9 @@ class ConstructorPage(BasePage):
 
     @allure.step("Ожидание появления модального окна с заказом")
     def wait_for_order_modal_to_appear(self, timeout=10):
-        WebDriverWait(self.driver, timeout).until(
-            EC.visibility_of_element_located(self.locators.ORDER_MODAL),
-            "Модальное окно с заказом не открылось за отведенное время"
-        )
+        self.wait_for_element_to_be_visible(self.locators.ORDER_MODAL, timeout)
 
     @allure.step("Ожидание завершения загрузки модального окна создания заказа")
     def wait_for_modal_loading(self, timeout=10):
-        WebDriverWait(self.driver, timeout).until(EC.invisibility_of_element_located(self.locators.ORDER_MODAL_LOADING),
-            "Элемент с классом {self.locators.ORDER_MODAL_LOADING} не исчез в течение {timeout}")
+        self.wait_for_element_to_be_invisible(self.locators.ORDER_MODAL_LOADING, timeout)
 

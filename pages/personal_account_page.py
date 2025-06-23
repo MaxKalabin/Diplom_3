@@ -1,9 +1,7 @@
 import allure
-from selenium.webdriver.support.wait import WebDriverWait
 from locators.login_locators import LoginLocators
 from pages.base_page import BasePage
 from locators.personal_account_locators import PersonalAccountLocators
-from selenium.webdriver.support import expected_conditions as EC
 
 @allure.step("Инициализация страницы Личного Кабинета")
 class PersonalAccountPage(BasePage):
@@ -15,7 +13,7 @@ class PersonalAccountPage(BasePage):
     @allure.step("Переход в личный кабинет")
     def click_header_account_link(self):
         self.click_element(self.locators.HEADER_ACCOUNT_LINK)
-        WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located(self.locators.LOGOUT_BUTTON))
+        self.wait_for_element_to_be_visible(self.locators.LOGOUT_BUTTON,10)
 
     @allure.step("Проверка отображения личного кабинета")
     def is_at_personal_account(self):
