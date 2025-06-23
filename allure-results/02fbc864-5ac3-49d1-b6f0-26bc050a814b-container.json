@@ -1,1 +1,0 @@
-{"uuid": "81767711-e079-4d1f-9f61-3e4db11af033", "children": ["37403cff-58d2-4abe-8bfb-30732ee6e486"], "befores": [{"name": "login_page", "status": "passed", "steps": [{"name": "Инициализация страницы Авторизации", "status": "passed", "start": 1750604644310, "stop": 1750604644310}], "start": 1750604644310, "stop": 1750604644310}], "start": 1750604644310, "stop": 1750604652352}
